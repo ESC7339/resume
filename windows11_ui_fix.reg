@@ -1,0 +1,22 @@
+; Enable classic context menu
+[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Explorer]
+"ShowSecondsInSystemClock"=dword:00000001
+"EnableClassicContextMenu"=dword:00000001
+
+; Adjust taskbar size to small (similar to Windows 10)
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"TaskbarSi"=dword:00000000
+
+; Enable Taskbar alignment to the left (similar to Windows 10)
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"TaskbarAl"=dword:00000000
+
+; Enable taskbar context menu on right-click (this restores the Task Manager option)
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer]
+"NoTaskGrouping"=dword:00000001
+
+; To enable the old volume control UI
+[HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC]
+"EnableMtcUvc"=dword:00000000
+
+; You may have to bounce explorer process for this to take effect

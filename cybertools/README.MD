@@ -1,0 +1,1 @@
+These work, don't use them. When provided a wordlist they will enumerate endpoints then the second script will attempt to bypass WAF via urlencoded sql statements.

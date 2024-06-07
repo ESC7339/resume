@@ -1,0 +1,43 @@
+---
+- name: Enumerate critical system and application events
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Fetch critical system logs from the last week
+      shell: |
+        journalctl --since "7 days ago" -p 3 --no-pager
+      register: critical_system_logs
+
+    - name: Fetch critical application logs from the last week
+      shell: |
+        grep -i "critical" /var/log/*.log --since "7 days ago"
+      register: critical_application_logs
+      ignore_errors: yes
+
+    - name: Combine logs
+      set_fact:
+        all_logs: "{{ critical_system_logs.stdout_lines + critical_application_logs.stdout_lines | default([]) }}"
+
+    - name: Parse logs and count repeats
+      set_fact:
+        log_summary: "{{ all_logs | groupby('identity') | map(attribute='1') | map('unique', attribute='0') | list }}"
+
+    - name: Initialize summary
+      set_fact:
+        unique_logs: []
+        repeat_warnings: []
+
+    - name: Process logs
+      set_fact:
+        unique_logs: "{{ unique_logs + [item[0]] if item[1] | length == 1 else unique_logs }}"
+        repeat_warnings: "{{ repeat_warnings + ['Event: ' + item[0] + ' Repeats: ' + item[1] | length | string] if item[1] | length > 1 else repeat_warnings }}"
+      with_items: "{{ log_summary }}"
+
+    - name: Display unique logs
+      debug:
+        msg: "{{ unique_logs }}"
+
+    - name: Log repeat warnings
+      debug:
+        msg: "{{ repeat_warnings }}"
+      when: repeat_warnings | length > 0

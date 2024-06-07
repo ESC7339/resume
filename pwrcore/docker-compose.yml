@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  ansible:
+    image: williamyeh/ansible:alpine3
+    container_name: ansible
+    volumes:
+      - ./ansible:/etc/ansible
+    networks:
+      - ansible_net
+
+networks:
+  ansible_net:
+    driver: bridge
